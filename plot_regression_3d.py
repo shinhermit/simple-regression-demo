@@ -21,10 +21,7 @@ def display_results(x1, x2, y, y_pred):
     #                       alpha=0.5,
     #                       linewidth=0,
     #                       antialiased=False)
-    X, Y = numpy.meshgrid(x1, x2)
-    a, b, c, d = -1, 1, 2, -4
-    Z = -1/c * (a*X + b*Y + d) + numpy.random.uniform(-10, 10, 50)
-    surf = ax.plot_surface(X, Y, Z,
+    surf = ax.plot_surface(x1, x2, y.reshape(-1, 1),
                            alpha=0.5,
                            linewidth=0,
                            antialiased=False)
@@ -45,8 +42,8 @@ y = -1/c * (a*x1 + b*x2 + d) + numpy.random.uniform(-10, 10, 50)
 x = numpy.array(list(zip(x1, x2)))
 
 # create a training set
-x_train = x[:-25]
-y_train = y[:-25]
+x_train = x[:10]
+y_train = y[:10]
 
 # train linear regression object
 model = linear_model.LinearRegression()
