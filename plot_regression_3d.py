@@ -10,7 +10,7 @@ a, b, c, d = -1, 1, 2, -4
 x1 = numpy.linspace(0, 50, 50) + numpy.random.uniform(-4, 4, 50)
 numpy.random.seed(1983)
 x2 = numpy.linspace(0, 50, 50) + numpy.random.uniform(-4, 4, 50)
-y = -1/c * (a*x + b*y + d)
+y = -1/c * (a*x1 + b*x2 + d)
 
 # transform inputs into 2D array
 x = numpy.array(list(zip(x1, x2)))
