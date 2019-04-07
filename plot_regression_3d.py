@@ -17,7 +17,14 @@ def display_results(x1, x2, y, y_pred):
     ax.scatter(x1, x2, y, c='r')
     
     # prediction
-    surf = ax.plot_surface(x1, x2, y_pred,
+    #ax.plot_trisurf(x1, x2, y_pred.reshape(-1, 50),
+    #                       alpha=0.5,
+    #                       linewidth=0,
+    #                       antialiased=False)
+    X, Y = numpy.meshgrid(x1, x2)
+    a, b, c, d = -1, 1, 2, -4
+    Z = -1/c * (a*X + b*Y + d) + numpy.random.uniform(-10, 10, 50)
+    surf = ax.plot_surface(X, Y, Z,
                            alpha=0.5,
                            linewidth=0,
                            antialiased=False)
