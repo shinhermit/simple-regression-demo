@@ -39,7 +39,7 @@ x = numpy.array(list(zip(x1, x2)))
 
 # create a training set
 x_train = x[:-25]
-y_train = numpy.array(y[:-25]).reshape(-1, 1)
+y_train = y[:-25]
 
 # train linear regression object
 model = linear_model.LinearRegression()
