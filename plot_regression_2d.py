@@ -15,13 +15,13 @@ def generate_data_set(size=50, seed_x=123, seed_y=321):
     :param size: the desired size of the generate data set.
     :param seed_x: seed for random noise to add to the x coordinates of the generated data
     :param seed_y: seed for random noise to add to the y coordinates of the generated data
-    :return: x, y values as numpy.ndarray
+    :return: x, y values as column vectors numpy.ndarray
     """
     numpy.random.seed(seed_x)
     x = numpy.linspace(0, size, size) + numpy.random.uniform(-size * 0.1, size * 0.1, size)
     numpy.random.seed(seed_y)
     y = numpy.linspace(0, size, size) + numpy.random.uniform(-size * 0.1, size * 0.1, size)
-    return x, y
+    return x.reshape(-1, 1), y.reshape(-1, 1)
 
 
 def partition_data(x, y):
@@ -64,7 +64,7 @@ def display_results(x, y, model):
     # plot the data
     pyplot.scatter(x, y,  color='black')
     # plot the trained model as a line
-    pyplot.plot(x, model.predict(x.reshape(-1, 1)),
+    pyplot.plot(x, model.predict(x),
                 color='blue', linewidth=3)
 
 
@@ -73,8 +73,7 @@ def main():
     x_train, y_train, x_test, y_test = partition_data(x, y)
 
     model = LinearRegression()
-    model.fit(x_train.reshape(-1, 1),
-              y_train.reshape(-1, 1))
+    model.fit(x_train, y_train)
 
     display_results(x, y, model)
 
