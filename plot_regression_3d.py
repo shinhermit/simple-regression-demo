@@ -1,6 +1,7 @@
 import numpy
 import matplotlib.pyplot as pyplot
 from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from sklearn import linear_model
 
 
@@ -56,7 +57,8 @@ def get_training_data(x: numpy.ndarray,
                       y: numpy.ndarray,
                       percent=20) -> (numpy.ndarray, numpy.ndarray):
     """
-    Slices the data set so as to get a part of the data to use as the training set.
+    Sample the data set at regular steps so as to get a
+    part of the data to use as the training set.
 
     :param x: the features or inputs of the data set,. x has the shape:
     [[x11, x12],
@@ -67,8 +69,10 @@ def get_training_data(x: numpy.ndarray,
     :param percent: percent of the data set to use for training.
     :return: x_train, y_train as slices of the data set.
     """
-    size = int(x.shape[0] * percent / 100)
-    return x[:size], y[:size]
+    size = x.shape[0]
+    sample_size = int(size * percent / 100)
+    step = int(size / sample_size)
+    return x[:size:step], y[:size:step]
 
 
 def display_results(x: numpy.ndarray,
@@ -98,7 +102,7 @@ def display_results(x: numpy.ndarray,
     data set.
     """
 
-    def legend_workaround(surf):
+    def legend_workaround(poly3d: Poly3DCollection):
         """
         Workaround the bug on 3D legend causing the exception:
         > AttributeError: 'Poly3DCollection' object has no attribute '_edgecolors2d'
@@ -109,8 +113,8 @@ def display_results(x: numpy.ndarray,
         - https://stackoverflow.com/a/54994985
         - https://github.com/matplotlib/matplotlib/issues/4067
         """
-        surf._facecolors2d=surf._facecolors3d
-        surf._edgecolors2d=surf._edgecolors3d
+        poly3d._facecolors2d=poly3d._facecolors3d
+        poly3d._edgecolors2d=poly3d._edgecolors3d
 
     fig = pyplot.figure()
     ax = fig.add_subplot(111, projection='3d')
