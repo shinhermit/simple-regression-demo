@@ -5,7 +5,7 @@ Plots the article's example of a 2D regression.
 
 import numpy
 import matplotlib.pyplot as pyplot
-from sklearn import linear_model
+from sklearn.linear_model import LinearRegression
 
 # Genrating random linear data
 # There will be 50 data points ranging from 0 to 50
@@ -28,7 +28,7 @@ x_test = x[partition_size:]
 y_test = y[partition_size:]
 
 # Create linear regression object
-model = linear_model.LinearRegression()
+model = LinearRegression()
 
 # Train the model using the training sets
 #model.fit(x_train, y_train)
