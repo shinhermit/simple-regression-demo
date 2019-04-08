@@ -12,7 +12,7 @@ def create_plane_equation(ax: float, by: float, cz: float, dd: float) -> callabl
     :param ax: coefficient of the x coordinate
     :param by: coefficient of the y coordinate
     :param cz: coefficient of the z coordinate
-    :param dd: bias
+    :param dd: intercept
     :return:
     """
     def plane_z(x: numpy.ndarray, y: numpy.ndarray) -> numpy.ndarray:
@@ -25,7 +25,8 @@ def create_plane_equation(ax: float, by: float, cz: float, dd: float) -> callabl
         :return: z coordinate = -1/c * (a*x + b*y + d)
         """
         a, b, c, d = ax, by, cz, dd
-        return -1/c * (a*x + b*y + d)
+        c_inv = -1/c if c != 0 else 0
+        return c_inv * (a*x + b*y + d)
 
     return plane_z
 
@@ -45,7 +46,12 @@ def get_training_data(x: numpy.ndarray, y: numpy.ndarray, percent=20) -> (numpy.
     return x[:size], y[:size]
 
 
-def display_results(x, x1, x2, y, model):
+def display_results(x: numpy.ndarray,
+                    x1: numpy.ndarray,
+                    x2: numpy.ndarray,
+                    y: numpy.ndarray,
+                    model: callable,
+                    generator_equation: callable=None):
     fig = pyplot.figure()
     ax = fig.add_subplot(111, projection='3d')
     
@@ -53,30 +59,48 @@ def display_results(x, x1, x2, y, model):
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
+    ax.view_init(azim=25, elev=30)
     
-    # dataset
+    # plot the data
     ax.scatter(x1, x2, y, c='r')
-    
-    # prediction
-    plane_z = create_plane_equation(ax=model.coef_[0], by=model.coef_[1], cz=-1, dd=model.intercept_)
-    ax.plot_surface(*numpy.meshgrid([0., 50.], [0., 50.]),
-                    plane_z([0., 50.], [0., 50.]),
+
+    # for planes
+    mesh_dim = numpy.array([x.min(), x.max()])
+    mesh_x, mesh_y = numpy.meshgrid(mesh_dim, mesh_dim)
+
+    # plot the trained model
+    plane_z = create_plane_equation(ax=model.coef_[0],
+                                    by=model.coef_[1],
+                                    cz=-1,
+                                    dd=model.intercept_)
+    ax.plot_surface(mesh_x, mesh_y,
+                    plane_z(mesh_x, mesh_y),
                     alpha=0.5,
                     linewidth=0,
                     antialiased=False)
-    
-    pyplot.show()
+
+    # plot the data generator equation
+    if generator_equation is not None:
+        ax.plot_surface(mesh_x, mesh_y,
+                        generator_equation(mesh_x, mesh_y),
+                        color='y',
+                        alpha=0.5,
+                        linewidth=0,
+                        antialiased=False)
 
 
 def main():
-    x1, x2, y = generate_data(create_plane_equation(ax=-1., by=1., cz=2., dd=-4.), size=50)
+    plane_z = create_plane_equation(ax=10, by=2, cz=-10, dd=5)
+    x1, x2, y = generate_data(plane_z, size=50)
     x = numpy.array(list(zip(x1, x2)))
     x_train, y_train = get_training_data(x, y)
 
     model = linear_model.LinearRegression(fit_intercept=True)
     model.fit(x_train, y_train)
 
-    display_results(x, x1, x2, y, model)
+    display_results(x, x1, x2, y, model, plane_z)
+
+    pyplot.show()
 
 
 if __name__ == "__main__":
