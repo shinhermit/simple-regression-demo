@@ -1,6 +1,6 @@
 """
 Plots the article's example of a 2D regression.
-(sectoion "Understanding linearity")
+(section "Understanding linearity")
 """
 
 import numpy
