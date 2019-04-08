@@ -21,6 +21,7 @@ y += numpy.random.uniform(-4, 4, 50)
 partition_size=25
 
 # Split the data into training/testing sets
+# TODO: NOTE: slicing is a bad way of splitting the data. Prefer random sampling
 x_train = x[:-partition_size]
 y_train = y[:-partition_size]
 

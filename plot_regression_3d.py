@@ -97,17 +97,31 @@ def display_results(x: numpy.ndarray,
     :param generator_equation: the plane equation used to generate the
     data set.
     """
+
+    def legend_workaround(surf):
+        """
+        Workaround the bug on 3D legend causing the exception:
+        > AttributeError: 'Poly3DCollection' object has no attribute '_edgecolors2d'
+
+        This function should be removed when the issue is resolved.
+
+        more:
+        - https://stackoverflow.com/a/54994985
+        - https://github.com/matplotlib/matplotlib/issues/4067
+        """
+        surf._facecolors2d=surf._facecolors3d
+        surf._edgecolors2d=surf._edgecolors3d
+
     fig = pyplot.figure()
     ax = fig.add_subplot(111, projection='3d')
-    
-    ax.legend()
+
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
     ax.view_init(azim=25, elev=30)
     
     # plot the data
-    ax.scatter(x1, x2, y, c='r')
+    ax.scatter(x1, x2, y, c='r', label="Data")
 
     # for planes
     mesh_dim = numpy.array([x.min(), x.max()])
@@ -118,20 +132,26 @@ def display_results(x: numpy.ndarray,
                                     by=model.coef_[1],
                                     cz=-1,
                                     dd=model.intercept_)
-    ax.plot_surface(mesh_x, mesh_y,
+    surf = ax.plot_surface(mesh_x, mesh_y,
                     plane_z(mesh_x, mesh_y),
                     alpha=0.5,
                     linewidth=0,
-                    antialiased=False)
+                    antialiased=False,
+                    label="Trained model")
+    legend_workaround(surf)
 
     # plot the data generator equation
     if generator_equation is not None:
-        ax.plot_surface(mesh_x, mesh_y,
+        surf = ax.plot_surface(mesh_x, mesh_y,
                         generator_equation(mesh_x, mesh_y),
                         color='y',
                         alpha=0.5,
                         linewidth=0,
-                        antialiased=False)
+                        antialiased=False,
+                        label="Data generator's equation")
+        legend_workaround(surf)
+
+    ax.legend()
 
 
 def main():
