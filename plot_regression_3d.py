@@ -32,6 +32,17 @@ def create_plane_equation(ax: float, by: float, cz: float, dd: float) -> callabl
 
 
 def generate_data(plane_z: callable, size=50, seed_x=123, seed_y=321, seed_z=1885):
+    """
+    Generate data points lying close to a plane.
+
+    :param plane_z: function that calculates the z coordinate of the
+    points of a plane given their x and y coordinates.
+    :param size: the desired size of the generate data set.
+    :param seed_x: seed for random noise to add to the x coordinates of the generated data
+    :param seed_y: seed for random noise to add to the y coordinates of the generated data
+    :param seed_z: seed for random noise to add to the z coordinates of the generated data
+    :return: x, y, z values as numpy.ndarray
+    """
     numpy.random.seed(seed_x)
     x = numpy.linspace(0, size, size) + numpy.random.uniform(-size * 0.1, size * 0.1, size)
     numpy.random.seed(seed_y)
@@ -41,7 +52,21 @@ def generate_data(plane_z: callable, size=50, seed_x=123, seed_y=321, seed_z=188
     return x, y, z
 
 
-def get_training_data(x: numpy.ndarray, y: numpy.ndarray, percent=20) -> (numpy.ndarray, numpy.ndarray):
+def get_training_data(x: numpy.ndarray,
+                      y: numpy.ndarray,
+                      percent=20) -> (numpy.ndarray, numpy.ndarray):
+    """
+    Slices the data set so as to get a part of the data to use as the training set.
+
+    :param x: the features or inputs of the data set,. x has the shape:
+    [[x11, x12],
+     [x21, x22]
+     ...
+     [xn1, xn2]]
+    :param y: the outputs from the training set. y is just a flat array.
+    :param percent: percent of the data set to use for training.
+    :return: x_train, y_train as slices of the data set.
+    """
     size = int(x.shape[0] * percent / 100)
     return x[:size], y[:size]
 
@@ -52,6 +77,26 @@ def display_results(x: numpy.ndarray,
                     y: numpy.ndarray,
                     model: callable,
                     generator_equation: callable=None):
+    """
+    Plot the results.
+
+    - Plot the data set as a scatter plot
+    - Plot the trained model as a plane. We use the coefficients
+      a calculated by the model to plot the plane.
+    - Plot the generator equation as a plane.
+
+    :param x:the features or inputs of the data set,. x has the shape:
+    [[x11, x12],
+     [x21, x22]
+     ...
+     [xn1, xn2]]
+    :param x1: the first feature, as a 1D ndarray
+    :param x2: the second feature, as a 1D ndarray
+    :param y: the target value, as a 1D ndarray
+    :param model: the trained scikit learn model
+    :param generator_equation: the plane equation used to generate the
+    data set.
+    """
     fig = pyplot.figure()
     ax = fig.add_subplot(111, projection='3d')
     
