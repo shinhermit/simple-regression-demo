@@ -4,43 +4,49 @@ Plots the article's example of a 2D regression.
 """
 
 import numpy
-import matplotlib.pyplot as pyplot
+from matplotlib import pyplot
 from sklearn.linear_model import LinearRegression
 
-# Genrating random linear data
-# There will be 50 data points ranging from 0 to 50
-x = numpy.linspace(0, 50, 50)
-y = numpy.linspace(0, 50, 50)
 
-# Adding noise to the random linear data
-# Seed numpy so as to generate predictable random numbers
-numpy.random.seed(101)
-x += numpy.random.uniform(-4, 4, 50)
-y += numpy.random.uniform(-4, 4, 50)
+def generate_data_set(size=50, seed_x=123, seed_y=321):
+    numpy.random.seed(seed_x)
+    x = numpy.linspace(0, size, size) + numpy.random.uniform(-size * 0.1, size * 0.1, size)
+    numpy.random.seed(seed_y)
+    y = numpy.linspace(0, size, size) + numpy.random.uniform(-size * 0.1, size * 0.1, size)
+    return x, y
 
-partition_size=25
 
-# Split the data into training/testing sets
-# TODO: NOTE: slicing is a bad way of splitting the data. Prefer random sampling
-x_train = x[:-partition_size]
-y_train = y[:-partition_size]
+def partition_data(x, y):
+    size = x.shape[0]
+    partition_size = int(size / 3)
+    step = int(size / partition_size)
+    x_train = x[:partition_size:step]
+    y_train = y[:partition_size:step]
+    x_test = x[1:partition_size:step]
+    y_test = y[1:partition_size:step]
+    return x_train, y_train, x_test, y_test
 
-x_test = x[partition_size:]
-y_test = y[partition_size:]
 
-# Create linear regression object
-model = LinearRegression()
+def display_results(x, y, model):
+    # plot the data
+    pyplot.scatter(x, y,  color='black')
+    # plot the trained model as a line
+    pyplot.plot(x, model.predict(x.reshape(-1, 1)),
+                color='blue', linewidth=3)
 
-# Train the model using the training sets
-#model.fit(x_train, y_train)
-model.fit(numpy.array(x_train).reshape(-1, 1),
-          numpy.array(y_train).reshape(-1, 1))
 
-# Make predictions using the testing set
-y_pred = model.predict(numpy.array(x).reshape(-1, 1))
+def main():
+    x, y = generate_data_set()
+    x_train, y_train, x_test, y_test = partition_data(x, y)
 
-# Plot outputs
-pyplot.scatter(x, y,  color='black')
-pyplot.plot(x, y_pred, color='blue', linewidth=3)
+    model = LinearRegression()
+    model.fit(x_train.reshape(-1, 1),
+              y_train.reshape(-1, 1))
 
-pyplot.show()
+    display_results(x, y, model)
+
+    pyplot.show()
+
+
+if __name__ == "__main__":
+    main()

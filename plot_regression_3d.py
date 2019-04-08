@@ -1,5 +1,5 @@
 import numpy
-import matplotlib.pyplot as pyplot
+from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from sklearn import linear_model
