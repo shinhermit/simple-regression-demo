@@ -1,6 +1,8 @@
 """
-Plots the article's example of a 2D regression.
-(section "Understanding linearity")
+Plot data points close to a line in a 2D space.
+
+Used to illustrate the section "Understanding linearity"
+of the first article about linear regression.
 """
 
 import numpy

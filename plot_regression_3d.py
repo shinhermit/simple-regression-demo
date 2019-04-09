@@ -1,3 +1,9 @@
+"""
+Plot data points lying close to a plane in a 3D space.
+
+Used to illustrate the section "Understanding linearity"
+of the first article about linear regression.
+"""
 import numpy
 from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
