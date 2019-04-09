@@ -1,7 +1,5 @@
 import numpy
 from matplotlib import pyplot
-from mpl_toolkits.mplot3d import Axes3D
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from sklearn.linear_model import LinearRegression
 
 from equations import PlaneEquation
