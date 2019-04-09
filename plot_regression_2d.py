@@ -26,9 +26,10 @@ def generate_data_set(size=50, seed_x=123, seed_y=321):
     return x.reshape(-1, 1), y.reshape(-1, 1)
 
 
-def partition_data(x, y):
+def partition_data(x: numpy.ndarray, y: numpy.ndarray) -> (numpy.ndarray, numpy.ndarray,
+                                                           numpy.ndarray, numpy.ndarray):
     """
-    Parition the data set into 3 clusters by
+    Partition the data set into 3 clusters by
     sampling 1 third of the data for each of
     the training set, the test set and the validation set.
 
@@ -45,7 +46,7 @@ def partition_data(x, y):
     return x_train, y_train, x_test, y_test
 
 
-def display_results(x, y, model):
+def display_results(x: numpy.ndarray, y: numpy.ndarray, model: LinearRegression):
     """
     Plot the results.
 
