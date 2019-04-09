@@ -10,7 +10,7 @@ of the first article about linear regression.
 import numpy
 from matplotlib import pyplot
 
-from equations import LineEquation
+from equations import LineParametricEquation
 
 
 def configure_plot(t: numpy.ndarray):
@@ -48,7 +48,7 @@ def reset_plot_limits(x: numpy.ndarray, y: numpy.ndarray):
 
 
 
-def draw_line(f: LineEquation, t: numpy.ndarray, **kwargs):
+def draw_line(f: LineParametricEquation, t: numpy.ndarray, **kwargs):
     """
     Plot a line on the figure.
 
@@ -64,9 +64,9 @@ def draw_line(f: LineEquation, t: numpy.ndarray, **kwargs):
 def main():
     p = numpy.array([2, 1])
 
-    f = LineEquation(p, u=numpy.array([1, 1]))
-    g = LineEquation(p, u=numpy.array([1, -1]))
-    h = LineEquation(p, u=numpy.array([.2, -1]))
+    f = LineParametricEquation(p, u=numpy.array([1, 1]))
+    g = LineParametricEquation(p, u=numpy.array([1, -1]))
+    h = LineParametricEquation(p, u=numpy.array([.2, -1]))
 
     t = numpy.array([-5, 5])
 

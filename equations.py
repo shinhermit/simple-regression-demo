@@ -1,7 +1,7 @@
 import numpy
 
 
-class LineEquation:
+class LineParametricEquation:
     """
     Represents the equation of a line.
 
@@ -58,7 +58,7 @@ class LineEquation:
         return self._y0 + t*self._uy
 
     def update(self, p: numpy.ndarray=None,
-              u: numpy.ndarray=None) -> 'LineEquation':
+              u: numpy.ndarray=None) -> 'LineParametricEquation':
         """
         Update either the anchor point p, the directing vector u
         or both.
@@ -76,7 +76,7 @@ class LineEquation:
         return self
 
 
-class PlaneEquation:
+class PlaneParametricEquation:
     """
     Represents the equation of a plane.
 
@@ -154,7 +154,7 @@ class PlaneEquation:
         return self._z0 + t*self._uz + s*self._vz
 
     @staticmethod
-    def from_general_form(a: float, b: float, c: float, d: float) -> 'PlaneEquation':
+    def from_general_form(a: float, b: float, c: float, d: float) -> 'PlaneParametricEquation':
         assert a + b + c != 0
         if c != 0:
             p = numpy.array([0, 0, -d / c])
@@ -162,4 +162,23 @@ class PlaneEquation:
             p = numpy.array([0, -d / b, 0])
         else:
             p = numpy.array([-d / a, 0, 0])
-        return PlaneEquation(p, u=numpy.array([b, -a, 0]), v=numpy.array([0, -c, b]))
+        return PlaneParametricEquation(p, u=numpy.array([b, -a, 0]), v=numpy.array([0, -c, b]))
+
+
+class PlaneEquation:
+    def __init__(self, a: float, b: float, c: float, d: float):
+        assert a + b + c != 0
+        self._a, self._b, self._c, self._d = a, b, c, d
+
+    def __call__(self, x: numpy.ndarray, y: numpy.ndarray) -> numpy.ndarray:
+        return self.z(x, y)
+
+    def z(self, x: numpy.ndarray, y: numpy.ndarray) -> numpy.ndarray:
+        if self._c == 0:
+            if self._a*x + self._b*y + self._d == 0:
+                return x + y
+            else:
+                raise ValueError("The coefficient of z is null. x and y must comply "
+                                 "with {a}x + {b}y + {d} = 0".format(a=self._a, b=self._b, d=self._d))
+        else:
+            return -1/self._c * (self._a*x + self._b*y + self._d)
