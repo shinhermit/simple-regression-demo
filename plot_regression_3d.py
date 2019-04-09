@@ -5,6 +5,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from sklearn.linear_model import LinearRegression
 
 from equations import PlaneEquation
+from utils import legend_workaround
 
 
 def generate_data(equation: PlaneEquation, size=50, seed_x=123, seed_y=321, seed_z=1885):
@@ -76,20 +77,6 @@ def display_results(x: numpy.ndarray,
     :param generator_equation: the plane equation used to generate the
     data set.
     """
-
-    def legend_workaround(poly3d: Poly3DCollection):
-        """
-        Workaround the bug on 3D legend causing the exception:
-        > AttributeError: 'Poly3DCollection' object has no attribute '_edgecolors2d'
-
-        This function should be removed when the issue is resolved.
-
-        more:
-        - https://stackoverflow.com/a/54994985
-        - https://github.com/matplotlib/matplotlib/issues/4067
-        """
-        poly3d._facecolors2d=poly3d._facecolors3d
-        poly3d._edgecolors2d=poly3d._edgecolors3d
 
     fig = pyplot.figure()
     ax = fig.add_subplot(111, projection='3d')
