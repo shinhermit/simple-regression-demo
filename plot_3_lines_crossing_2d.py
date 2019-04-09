@@ -19,14 +19,14 @@ class LineEquation:
     a*x + b*y + c = 0
     """
 
-    def __init__(self, a=1, b=1, c=1):
+    def __init__(self, P: numpy.ndarray, u: numpy.ndarray):
         """
-        Initializes an equation of the form.
-        a*x + b*y + c = 0
+        Initializes a parametric equation of the form:
+        x = P[0] + t*u[0]
+        y = P[1] + t*u[1]
 
-        :param a: coefficient of the x variable
-        :param b: coefficient of the y variable
-        :param c: intercept
+        :param P: a point that lies on the line
+        :param u: directing vector of the line
         """
         self.a_, self.b_, self.c_ = a, b, c
 
