@@ -19,60 +19,40 @@ class LineEquation:
     a*x + b*y + c = 0
     """
 
-    def __init__(self, P: numpy.ndarray, u: numpy.ndarray):
+    def __init__(self, p: numpy.ndarray, u: numpy.ndarray):
         """
         Initializes a parametric equation of the form:
         x = P[0] + t*u[0]
         y = P[1] + t*u[1]
 
-        :param P: a point that lies on the line
+        :param p: a point that lies on the line
         :param u: directing vector of the line
         """
-        self.a_, self.b_, self.c_ = a, b, c
+        assert p.shape == u.shape and p.shape == (2,)
+        self._x0, self._y0, self._ux, self._uy = p[0], p[1], u[0], u[1]
 
-    def __call__(self, x: numpy.ndarray) -> numpy.ndarray:
-        return self.y(x)
+    def x(self, t: numpy.ndarray) -> numpy.ndarray:
+        return self._x0 + t*self._ux
 
-    def y(self, x: numpy.ndarray) -> numpy.ndarray:
-        if self.b_ != 0:
-            b_inv = -1/self.b_
-        else:
-            b_inv = 0
-        return b_inv * (self.a_ * x + self.c_)
-
-    def x(self, y: numpy.ndarray) -> numpy.ndarray:
-        if self.a_ != 0:
-            a_inv = -1/self.a_ * (self.b_*y + self.c_)
-        else:
-            a_inv = 0
-        return a_inv * (self.b_*y + self.c_)
-
-    def reset(self,
-              a:float=None,
-              b:float=None,
-              c:float=None):
-        if a is not None:
-            self.a_ = a
-        if b is not None:
-            self.b_ = b
-        if a is not None:
-            self.c_ = c
+    def y(self, t: numpy.ndarray) -> numpy.ndarray:
+        return self._y0 + t*self._uy
 
 
-def configure_plot(x: numpy.ndarray):
-    pyplot.xlim(x.min(), x.max())
-    pyplot.ylim(x.min(), x.max())
+def configure_plot(t: numpy.ndarray):
+    pyplot.xlim(t.min(), t.max())
+    pyplot.ylim(t.min(), t.max())
     pyplot.xlabel('X')
     pyplot.ylabel('Y')
     pyplot.legend()
     pyplot.grid()
 
 
-def draw_line(x, f, color='blue'):
-    y = f(x)
+def draw_line(f, t, color='blue', **kwargs):
+    x = f.x(t)
+    y = f.y(t)
     pyplot.plot(x, y,
                 color=color,
-                linewidth=3)
+                **kwargs)
 
     y_max = max(abs(y.max()), abs(y.min()))
     y_lim = pyplot.ylim()
@@ -81,16 +61,20 @@ def draw_line(x, f, color='blue'):
 
 
 def main():
-    f = LineEquation(a=-1, b=1, c=1)
-    g = LineEquation(a=-1, b=-1, c=3)
-    h = LineEquation(a=1, b=0, c=-2)
+    p = numpy.array([2, 1])
 
-    x = numpy.array([-5, 5])
+    f = LineEquation(p, u=numpy.array([1, 1]))
+    g = LineEquation(p, u=numpy.array([1, -1]))
+    l = LineEquation(p+0.01, u=numpy.array([.2, -1]))
+    h = LineEquation(p, u=numpy.array([.2, -1]))
 
-    configure_plot(x)
-    draw_line(x, f, color='red')
-    draw_line(x, g, color='green')
-    draw_line(x, h, color='blue')
+    t = numpy.array([-5, 5])
+
+    configure_plot(t)
+    draw_line(f, t, color='red')
+    draw_line(g, t, color='green')
+    draw_line(l, t, color='blue', linewidth=1, linestyle='dashed')
+    draw_line(h, t, color='blue')
 
     pyplot.show()
 
