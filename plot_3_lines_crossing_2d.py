@@ -28,7 +28,7 @@ def configure_plot(t: numpy.ndarray):
     pyplot.grid()
 
 
-def reset_plot_limits(x: numpy.ndarray, y: numpy.ndarray):
+def update_plot_limits(x: numpy.ndarray, y: numpy.ndarray):
     """
     Update the limits of the reference frame given
     the x and y coordinates of some points drawn in the figure.
@@ -58,7 +58,7 @@ def draw_line(f: LineParametricEquation, t: numpy.ndarray, **kwargs):
     """
     x, y = f(t)
     pyplot.plot(x, y, **kwargs)
-    reset_plot_limits(x, y)
+    update_plot_limits(x, y)
 
 
 def main():
