@@ -153,17 +153,6 @@ class PlaneParametricEquation:
         """
         return self._z0 + t*self._uz + s*self._vz
 
-    @staticmethod
-    def from_general_form(a: float, b: float, c: float, d: float) -> 'PlaneParametricEquation':
-        assert a + b + c != 0
-        if c != 0:
-            p = numpy.array([0, 0, -d / c])
-        elif b != 0:
-            p = numpy.array([0, -d / b, 0])
-        else:
-            p = numpy.array([-d / a, 0, 0])
-        return PlaneParametricEquation(p, u=numpy.array([b, -a, 0]), v=numpy.array([0, -c, b]))
-
 
 class PlaneEquation:
     def __init__(self, a: float, b: float, c: float, d: float):
