@@ -73,9 +73,10 @@ def main():
     configure_plot(t)
     draw_line(f, t, color='red')
     draw_line(g, t, color='green')
-    draw_line(h, t, color='blue')
-    draw_line(h.update(p=p+0.01), t,
-              color='blue', linewidth=1, linestyle='dashed')
+    draw_line(h, t,
+              color='blue', linewidth=1,
+              linestyle='dashed')
+    draw_line(h.update(p=p+0.01), t, color='blue')
     pyplot.show()
 
 
